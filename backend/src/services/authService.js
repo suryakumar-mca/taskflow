@@ -2,15 +2,14 @@ const users = require("../data/users");
 const ApiError = require("../utils/ApiError");
 const { hashPassword, comparePassword} = require("../utils/password")
 const { generateToken } = require("../utils/jwt");
+const userRepository = require("../repositories/userRepository");
 
 const register = async function(userData){
     
     const {name, email, password} = userData
 
     //check for duplicate email
-    const existingUser = users.find(
-        user => user.email === email
-    );
+    const existingUser = await userRepository.findByEmail(email);
 
     if(existingUser){
         throw new ApiError(409, "EMAIL_ALREADY_EXISTS", "Email already exists.");
@@ -18,30 +17,21 @@ const register = async function(userData){
 
     const hashedPassword = await hashPassword(password)
 
-    const newUser = {
-        id: users.length + 1,
+    const createdUser = await userRepository.createUser({
         name,
         email,
-        password : hashedPassword
-    }
+        password: hashedPassword
+    });
 
-    //create new User
-    users.push(newUser)
-    console.log("Logging Data store =>", users)
-
-    // Return without password
-    return {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email
-    };
-};
+    return createdUser;
+}
 
 const login = async (credentials) => {
 
     const { email, password } = credentials;
 
-    const user = users.find(user => user.email === email);
+    const user = await userRepository.findByEmail(email);
+    console.log("Logging user retrieved from postgres ->", user)
 
     if (!user) {
         throw new ApiError(401, "INVALID_CREDENTIALS", "Invalid email or password.");
