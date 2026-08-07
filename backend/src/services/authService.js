@@ -1,4 +1,3 @@
-const users = require("../data/users");
 const ApiError = require("../utils/ApiError");
 const { hashPassword, comparePassword} = require("../utils/password")
 const { generateToken } = require("../utils/jwt");

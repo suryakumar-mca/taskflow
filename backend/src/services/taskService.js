@@ -1,87 +1,46 @@
-const tasks = require("../data/tasks");
 const ApiError = require("../utils/ApiError");
+const taskRespository = require("../repositories/taskRepository")
 
-const createTask = (taskText, userId) => {
 
-    const newTask = {
-        id: tasks.length + 1,
-        userId,
-        task: taskText,
-        completed: false
-    };
+const createTask = async function (taskText, userId){
+    
+    const createdTask = await taskRespository.createTask(taskText, userId)
 
-    tasks.push(newTask);
+    return createdTask;
+}
 
-    return {
-        id: newTask.id,
-        task: newTask.task,
-        completed: newTask.completed
-    };
+const getTasks = async function(userId){
 
-};
-
-const getTasks = (userId) => {
+    const tasks = await taskRespository.getTasks(userId)
 
     return tasks
-        .filter(task => task.userId === userId)
-        .map(task => ({
-            id: task.id,
-            task: task.task,
-            completed: task.completed
-        }));
-
-};
-
-const updateTask = (taskId, userId, updatedData) =>{
-
-    console.log("Logging task database in update service->", tasks)
-    console.log("Logging parameters ->", taskId, userId, updatedData)
-
-    const task = tasks.find(task => task.id === Number(taskId));
-
-    if(!task){
-        throw new ApiError(404,"TASK_NOT_FOUND", "Task not found")
-    }
-
-    if(task.userId !== userId){
-        throw new ApiError(403, "FORBIDDEN", "You are not allowed to modify this task.")
-    }
-
-    if(updatedData.task !== undefined){
-        task.task = updatedData.task
-    }
-
-    if(updatedData.completed !== undefined){
-        task.completed = updatedData.completed
-    }
-
-    return {
-        id: task.id,
-        task: task.task,
-        completed: task.completed
-    };
 
 }
 
-const deleteTask = (taskId, userId) =>{
+const updateTask = async function (userId, taskId, updatedData) {
 
-    const task = tasks.find(task => task.id === Number(taskId))
+    const task = await taskRespository.findById(userId, taskId)
+
+    if (!task) {
+        throw new ApiError(404, "TASK_NOT_FOUND", "Task not found")
+    }
+
+    const updatedTask = await taskRespository.update(userId, taskId, updatedData)
+
+    return updatedTask
+}
+
+
+const deleteTask = async function(userId, taskId){
+
+    const task = await taskRespository.findById(userId, taskId)
 
     if(!task){
         throw new ApiError(404,"TASK_NOT_FOUND", "Task not found")
     }
 
-    if(task.userId !== userId){
-        throw new ApiError(403, "FORBIDDEN", "You are not allowed to modify this task.")
-    }
-
-    const taskIndexToDelete = tasks.findIndex((task) => task.id === Number(taskId))
-
-    tasks.splice(taskIndexToDelete,1)
-
+    const deletedTask = await taskRespository.remove(userId, taskId)
     return
-    
-
 }
 
 

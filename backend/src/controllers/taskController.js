@@ -1,32 +1,32 @@
 const ApiResponse = require("../utils/ApiResponse");
 const taskService = require("../services/taskService");
 
-const createTask = (req, res) => {
+const createTask = async (req, res) => {
 
-    const task = taskService.createTask(req.body.task, req.user.userId);
+    const task = await taskService.createTask(req.body.task, req.user.userId);
 
     return res.status(201).json(new ApiResponse(201,"Task created successfully.",task));
 
 };
 
-const getTasks = (req, res) => {
+const getTasks = async (req, res) => {
 
-    const userTasks = taskService.getTasks(req.user.userId);
+    const userTasks = await taskService.getTasks(req.user.userId);
 
     return res.status(200).json(new ApiResponse(200, "Tasks fetched successfully.", userTasks));
 
 };
 
-const updateTask = (req, res) => {
+const updateTask = async (req, res) => {
 
-    const updatedTask = taskService.updateTask(req.params.id, req.user.userId, req.body)
+    const updatedTask = await taskService.updateTask(req.user.userId, req.params.id, req.body)
 
     return res.status(200).json(new ApiResponse(200,"Task updated successfully.",updatedTask)); 
 }
 
-const deleteTask = (req, res) => {
+const deleteTask = async (req, res) => {
 
-    const deletedTask = taskService.deleteTask(req.params.id, req.user.userId)
+    const deletedTask = await taskService.deleteTask(req.user.userId, req.params.id)
 
     return res.status(200).json(new ApiResponse(200,"Task deleted successfully.")); 
 }
