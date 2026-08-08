@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gray-100 min-h-screen flex justify-center items-center">
+
+    <div class="bg-white rounded-xl shadow-lg w-[450px] p-8">
+
+        <h1 class="text-3xl font-bold text-center mb-8">TaskFlow</h1>
+
+        <div class="flex border rounded-lg overflow-hidden mb-6">
+
+            <button id="loginToggle" class="w-1/2 bg-blue-500 text-white py-2"> Login </button>
+
+            <button id="signupToggle" class="w-1/2 py-2"> Signup </button>
+
+        </div>
+
+        <form id="authForm">
+
+            <input id="nameInput" type="text" placeholder="Name" class="w-full border rounded-lg p-3 mb-4"/>
+
+            <input id="emailInput" type="email" placeholder="Email Address" class="w-full border rounded-lg p-3 mb-4"/>
+
+            <input id="passwordInput" type="password" placeholder="Password" class="w-full border rounded-lg p-3 mb-4"/>
+
+            <p id="errorMessage" class="text-red-500 text-center h-6 mb-2"> </p>
+
+            <button id="submitButton" class="w-full bg-blue-500 text-white py-3 rounded-lg"> Login </button>
+
+        </form>
+
+    </div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/auth.js"></script>
+
+</body>
+
+</html>
